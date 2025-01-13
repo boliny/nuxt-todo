@@ -157,7 +157,7 @@
 <style scoped>
 .todo-list {
   max-width: 500px;
-  margin: 15% auto auto auto;
+  margin: 11% auto 0 auto;
 }
 /* Add task box button hover effect */
 .add-task-box button:hover,
