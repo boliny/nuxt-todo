@@ -57,7 +57,7 @@
         <transition-group name="fade" tag="div" class="task-list">
           <div
             v-for="(task, index) in tasks"
-            :key="task.text"
+            :key="index"
             class="task mb-2 flex gap-3 hover:bg-gray-200 transition duration-400 bg-slate-50 rounded-md p-3 shadow-md outline outline-2 outline-gray-300"
           >
             <font-awesome-icon
@@ -211,7 +211,7 @@ export default defineComponent({
     // Watch for changes in tasks and update localStorage
     watch(
       tasks,
-      (newTasks) => {
+      (newTasks: string) => {
         localStorage.setItem("tasks", JSON.stringify(newTasks));
       },
       { deep: true }
@@ -219,7 +219,7 @@ export default defineComponent({
 
     // Computed property for tasks that are marked as done
     const tasksDone = computed(
-      () => tasks.value.filter((task) => task.done).length
+      () => tasks.value.filter((task: { done: boolean }) => task.done).length
     );
 
     // Method to toggle a task's completion status
@@ -238,7 +238,9 @@ export default defineComponent({
     // Method to delete all completed tasks
     const deleteTasksDone = (): void => {
       if (confirm("Are you sure you want to delete all completed tasks?")) {
-        tasks.value = tasks.value.filter((task) => !task.done);
+        tasks.value = tasks.value.filter(
+          (task: { done: boolean }) => !task.done
+        );
       }
     };
 
@@ -277,7 +279,7 @@ export default defineComponent({
 
     // Method to delete a single task
     const deleteSingleTask = (task: Task): void => {
-      tasks.value = tasks.value.filter((t) => t !== task);
+      tasks.value = tasks.value.filter((t: Task) => t !== task);
     };
 
     return {
