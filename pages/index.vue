@@ -1,7 +1,7 @@
 <template>
   <div class="todo-list h-screen">
     <div class="todo-box">
-      <h1 class="text-7xl text-white mb-5 font-bold text-center">
+      <h1 class="lg:text-7xl text-4xl text-white mb-5 font-bold text-center">
         Vue ToDo List
       </h1>
       <!-- Task summary header -->
@@ -9,7 +9,7 @@
       <div
         class="todo-heading flex gap-3 items-center justify-end bg-gray-100 p-3"
       >
-        <div class="tasks">
+        <div class="tasks flex">
           <span class="bg-sky-600 font-bold rounded-2xl px-2 py-1 text-white">
             Tasks
             <span class="rounded-full bg-white text-sky-600 px-1.5">
@@ -17,7 +17,7 @@
             </span>
           </span>
         </div>
-        <div class="tasks-done">
+        <div class="tasks-done flex">
           <span class="bg-sky-600 font-bold rounded-2xl px-2 py-1 text-white">
             Tasks done
             <span class="rounded-full bg-white text-sky-600 px-1.5">
@@ -29,7 +29,7 @@
         <div
           @click="deleteTasksDone"
           v-if="tasksDone > 0"
-          class="delete-tasksDone bg-red-600 hover:bg-red-700 transition duration-200 p-1.5 cursor-pointer"
+          class="delete-tasksDone bg-red-600 hover:bg-red-700 transition duration-200 p-1.5 cursor-pointer flex items-center"
         >
           <font-awesome-icon :icon="['fas', 'trash']" class="text-white" />
           <button class="font-bold ml-3 text-white">Tasks Done</button>
@@ -37,7 +37,7 @@
         <div
           @click="deleteTasks"
           v-if="tasks.length > 0"
-          class="deleteTasks bg-red-600 p-1.5 hover:bg-red-700 transition duration-200 cursor-pointer"
+          class="deleteTasks bg-red-600 p-1.5 hover:bg-red-700 transition duration-200 cursor-pointer flex items-center"
         >
           <font-awesome-icon :icon="['fas', 'trash']" class="text-white" />
           <button class="font-bold ml-3 text-white">Tasks</button>
@@ -77,7 +77,10 @@
                 class="text-sky-600 cursor-pointer mr-3"
               />
               <font-awesome-icon
-                @click="deleteSingleTask(task)"
+                @click="
+                  deleteSingleTask(task);
+                  deleteTasksDone(task);
+                "
                 :icon="['fas', 'trash']"
                 class="text-red-600 cursor-pointer"
               />
@@ -162,7 +165,24 @@
   left: 50%;
   transform: translate(-50%, -50%);
 }
-/* Add task box button hover effect */
+@media (max-width: 1024px) {
+  .todo-box {
+    width: 95%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .delete-tasksDone,
+  .deleteTasks {
+    font-size: 11px;
+  }
+  .tasks-done,
+  .tasks {
+    text-align: center;
+    font-size: 11px;
+  }
+} /* Add task box button hover effect */
 .add-task-box button:hover,
 .delete-tasksDone:hover,
 .deleteTasks:hover {
@@ -188,6 +208,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, computed, watch, onMounted } from "vue";
+import Swal from "sweetalert2";
 
 interface Task {
   text: string;
@@ -240,18 +261,47 @@ export default defineComponent({
 
     // Method to delete all completed tasks
     const deleteTasksDone = (): void => {
-      if (confirm("Are you sure you want to delete all completed tasks?")) {
-        tasks.value = tasks.value.filter(
-          (task: { done: boolean }) => !task.done
-        );
-      }
+      Swal.fire({
+        title: "Are you sure?",
+        text: "This will delete all completed tasks!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete them!",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          tasks.value = tasks.value.filter((task) => !task.done);
+          Swal.fire(
+            "Deleted!",
+            "All completed tasks have been deleted.",
+            "success"
+          );
+        }
+      });
     };
 
     // Method to delete all tasks
     const deleteTasks = (): void => {
-      if (confirm("Are you sure you want to delete all tasks?")) {
-        tasks.value = [];
-      }
+      Swal.fire({
+        title: "Are you sure?",
+        text: "This will delete all tasks!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete them!",
+        cancelButtonText: "Cancel",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          tasks.value = [];
+          Swal.fire(
+            "Deleted!",
+            "All tasks have been deleted successfully.",
+            "success"
+          );
+        }
+      });
     };
 
     // Method to open the overlay to edit a task
