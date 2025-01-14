@@ -157,7 +157,7 @@
 <style scoped>
 .todo-list {
   max-width: 500px;
-  margin: 11% auto 0 auto;
+  margin: 0 auto;
 }
 /* Add task box button hover effect */
 .add-task-box button:hover,
@@ -211,7 +211,7 @@ export default defineComponent({
     // Watch for changes in tasks and update localStorage
     watch(
       tasks,
-      (newTasks: string) => {
+      (newTasks: Task[]) => {
         localStorage.setItem("tasks", JSON.stringify(newTasks));
       },
       { deep: true }
