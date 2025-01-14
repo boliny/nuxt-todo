@@ -1,9 +1,9 @@
 <template>
   <div class="todo-list h-screen">
-    <h1 class="text-7xl text-white mb-5 font-bold text-center">
-      Vue ToDo List
-    </h1>
     <div class="todo-box">
+      <h1 class="text-7xl text-white mb-5 font-bold text-center">
+        Vue ToDo List
+      </h1>
       <!-- Task summary header -->
 
       <div
@@ -155,9 +155,12 @@
 </template>
 
 <style scoped>
-.todo-list {
+.todo-box {
   max-width: 500px;
-  margin: 0 auto;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 /* Add task box button hover effect */
 .add-task-box button:hover,
